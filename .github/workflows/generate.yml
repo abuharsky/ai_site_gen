@@ -7,13 +7,17 @@ on:
         description: "site description"
         required: true
 
+permissions:
+  contents: write
+
 jobs:
   generate:
     runs-on: ubuntu-latest
 
     steps:
-
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -23,6 +27,20 @@ jobs:
       - name: Install Codex CLI
         run: npm install -g @openai/codex
 
+      - name: Validate OpenAI API key
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          test -n "$OPENAI_API_KEY" || {
+            echo "Missing OPENAI_API_KEY GitHub secret"
+            exit 1
+          }
+
+      - name: Login to Codex
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: printf '%s' "$OPENAI_API_KEY" | codex login --with-api-key
+
       - name: Layout planner
         run: node planner/layout_planner.js "${{ github.event.inputs.prompt }}"
 
@@ -30,7 +48,7 @@ jobs:
         run: node prompts/prompt_builder.js
 
       - name: Run Codex
-        run: codex run --prompt-file prompts/final_prompt.txt
+        run: codex -a never exec --sandbox workspace-write -C . - < prompts/final_prompt.txt
 
       - name: Commit result
         run: |
@@ -38,4 +56,4 @@ jobs:
           git config --global user.email "ai@example.com"
           git add index.html
           git commit -m "AI generated site" || echo "No changes"
-          git push
+          git push origin HEAD:${{ github.ref_name }}
