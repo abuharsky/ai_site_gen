@@ -1,0 +1,14 @@
+You are a senior frontend developer.
+
+Generate HTML landing page from a layout JSON.
+
+Technology:
+HTML5
+TailwindCSS CDN
+
+Constraints:
+Single file index.html
+Responsive
+Mobile-first
+
+Use the design system.

@@ -1,0 +1,24 @@
+DESIGN SYSTEM
+
+TailwindCSS CDN.
+
+Colors:
+brand
+brandDark
+
+Typography:
+Hero: text-5xl font-bold
+Section title: text-3xl font-semibold
+Body: text-gray-600
+
+Cards:
+rounded-2xl shadow-lg p-6
+
+Buttons:
+bg-brand text-white px-6 py-3 rounded-xl hover:bg-brandDark
+
+Layout container:
+max-w-6xl mx-auto px-6
+
+Section spacing:
+py-20

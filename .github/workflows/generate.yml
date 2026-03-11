@@ -1,0 +1,41 @@
+name: ai-site
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: "site description"
+        required: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Codex CLI
+        run: npm install -g @openai/codex
+
+      - name: Layout planner
+        run: node planner/layout_planner.js "${{ github.event.inputs.prompt }}"
+
+      - name: Build prompt
+        run: node prompts/prompt_builder.js
+
+      - name: Run Codex
+        run: codex run --prompt-file prompts/final_prompt.txt
+
+      - name: Commit result
+        run: |
+          git config --global user.name "ai-bot"
+          git config --global user.email "ai@example.com"
+          git add index.html
+          git commit -m "AI generated site" || echo "No changes"
+          git push
