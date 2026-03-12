@@ -2,6 +2,13 @@ DESIGN SYSTEM
 
 TailwindCSS CDN.
 
+Visual direction:
+Bright premium landing page.
+Refined spacing.
+Large confident typography.
+Clean composition with restrained accents.
+Expensive feel without ornate or flashy treatment.
+
 Colors:
 brand
 brandDark
